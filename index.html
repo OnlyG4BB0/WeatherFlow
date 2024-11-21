@@ -19,10 +19,11 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 10px;
         }
 
         h1 {
-            font-size: 3em;
+            font-size: 2.5em;
             margin-bottom: 20px;
             color: #4a4e69;
             animation: fadeIn 1s ease-in-out;
@@ -41,6 +42,9 @@
             gap: 10px;
             margin: 20px 0;
             animation: slideIn 1s ease-in-out;
+            width: 100%;
+            max-width: 400px; /* Aggiungiamo un max-width per evitare che diventi troppo largo */
+            margin-bottom: 20px;
         }
 
         input[type="text"] {
@@ -50,8 +54,8 @@
             border-radius: 25px;
             outline: none;
             transition: border-color 0.3s ease;
-            width: 300px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            box-sizing: border-box;
         }
 
         input[type="text"]:focus {
@@ -84,7 +88,7 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             text-align: center;
             max-width: 350px;
-            width: 90%;
+            width: 100%;
             margin-bottom: 30px;
             animation: fadeIn 1s ease-in-out;
         }
@@ -107,7 +111,8 @@
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
             padding: 25px;
             text-align: center;
-            min-width: 200px;
+            min-width: 220px;
+            max-width: 280px;
             flex-shrink: 0;
             opacity: 0;
             transform: translateY(20px);
@@ -200,13 +205,55 @@
 
         @media (max-width: 768px) {
             .forecast-card {
-                min-width: 200px;
+                min-width: 180px;
+                max-width: 220px;
+                font-size: 0.9em; /* Ridurre la dimensione del font */
+            }
+
+            h1 {
+                font-size: 2em; /* Ridurre la dimensione del titolo */
+            }
+
+            .search-container {
+                max-width: 100%;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            input[type="text"], button {
+                width: 100%;
+                font-size: 1.1em;
+            }
+
+            .weather-info {
+                padding: 15px;
+                font-size: 1em;
             }
         }
 
         @media (max-width: 480px) {
             .forecast-card {
-                min-width: 180px;
+                min-width: 160px;
+                max-width: 180px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .search-container {
+                max-width: 100%;
+                flex-direction: column;
+            }
+
+            input[type="text"], button {
+                font-size: 1em;
+                padding: 10px;
+            }
+
+            .weather-info {
+                padding: 10px;
+                font-size: 0.9em;
             }
         }
     </style>
@@ -235,71 +282,68 @@
             const currentWeather = document.getElementById('current-weather');
             const weeklyForecast = document.getElementById('weekly-forecast');
 
-            // Reset messaggi ed elementi
-            errorMessage.textContent = '';
+            // Pulisci i dati precedenti
             currentWeather.innerHTML = '';
             weeklyForecast.innerHTML = '';
+            errorMessage.textContent = '';
 
             if (!city) {
-                errorMessage.textContent = 'Per favore, inserisci una città.';
+                errorMessage.textContent = 'Per favore inserisci una città.';
                 return;
             }
 
             try {
-                // Chiamata API per il meteo attuale
-                const currentApiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&lang=it&appid=${apiKey}`;
-                const forecastApiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&lang=it&appid=${apiKey}`;
+                const currentWeatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=it`);
+                const currentWeatherData = await currentWeatherResponse.json();
 
-                const [currentResponse, forecastResponse] = await Promise.all([
-                    fetch(currentApiUrl),
-                    fetch(forecastApiUrl)
-                ]);
-
-                if (!currentResponse.ok || !forecastResponse.ok) {
-                    throw new Error('Città non trovata.');
+                if (currentWeatherData.cod !== 200) {
+                    throw new Error(currentWeatherData.message);
                 }
 
-                const currentData = await currentResponse.json();
-                const forecastData = await forecastResponse.json();
-
-                // Mostra meteo attuale
-                const { name } = currentData;
-                const { temp, humidity } = currentData.main;
-                const { description, icon } = currentData.weather[0];
-                const windSpeed = currentData.wind.speed;
+                const { main, weather, wind } = currentWeatherData;
+                const temp = Math.round(main.temp);
+                const description = weather[0].description;
+                const icon = weather[0].icon;
+                const humidity = main.humidity;
+                const windSpeed = wind.speed;
 
                 currentWeather.innerHTML = `
-                    <h3>Meteo attuale a ${name}</h3>
+                    <h2>${city}</h2>
                     <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="Icona meteo">
-                    <p class="temp">${Math.round(temp)}°C</p>
-                    <p>${description.charAt(0).toUpperCase() + description.slice(1)}</p>
+                    <p class="temp">${temp}°C</p>
+                    <p>${description}</p>
                     <p class="humidity">Umidità: ${humidity}%</p>
                     <p class="wind-speed">Vento: ${windSpeed} m/s</p>
                 `;
-                
+
                 // Previsioni settimanali
-                forecastData.list.slice(0, 7).forEach((day, index) => {
-                    const { temp, humidity } = day.main;
-                    const { description, icon } = day.weather[0];
-                    const windSpeed = day.wind.speed;
+                const forecastResponse = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric&lang=it`);
+                const forecastData = await forecastResponse.json();
+                const forecastList = forecastData.list.slice(0, 7); // Prende solo i prossimi 7 giorni
+                forecastList.forEach((forecast, index) => {
+                    const { dt, main, weather, wind } = forecast;
+                    const date = new Date(dt * 1000);
+                    const dayOfWeek = date.toLocaleString('it-IT', { weekday: 'long' });
+                    const temp = Math.round(main.temp);
+                    const description = weather[0].description;
+                    const icon = weather[0].icon;
+                    const windSpeed = wind.speed;
 
-                    const forecastCard = document.createElement('div');
-                    forecastCard.classList.add('forecast-card');
-                    forecastCard.style.animationDelay = `${index * 0.2}s`; // Aggiungi ritardo per l'animazione
-
-                    forecastCard.innerHTML = `
+                    const card = document.createElement('div');
+                    card.classList.add('forecast-card');
+                    card.innerHTML = `
+                        <h4>${dayOfWeek}</h4>
                         <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="Icona meteo">
-                        <h4>${new Date(day.dt * 1000).toLocaleDateString('it-IT', { weekday: 'long' })}</h4>
-                        <p class="temp">${Math.round(temp)}°C</p>
-                        <p>${description.charAt(0).toUpperCase() + description.slice(1)}</p>
-                        <p class="humidity">Umidità: ${humidity}%</p>
+                        <p class="temp">${temp}°C</p>
+                        <p>${description}</p>
+                        <p class="humidity">Umidità: ${main.humidity}%</p>
                         <p class="wind-speed">Vento: ${windSpeed} m/s</p>
                     `;
-                    
-                    weeklyForecast.appendChild(forecastCard);
+                    weeklyForecast.appendChild(card);
                 });
+
             } catch (error) {
-                errorMessage.textContent = error.message;
+                errorMessage.textContent = 'Errore nel recupero dei dati. Assicurati che la città sia corretta.';
             }
         }
     </script>
