@@ -99,6 +99,7 @@
             max-width: 800px;
             width: 100%;
             padding: 20px;
+            justify-content: center;
         }
 
         /* Card delle previsioni settimanali */
@@ -109,7 +110,8 @@
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
             padding: 20px;
             text-align: center;
-            width: 200px;
+            width: 180px;
+            max-width: 100%;
             opacity: 0;
             transform: translateY(20px);
             animation: fadeInUp 0.8s forwards;
@@ -117,8 +119,8 @@
         }
 
         .forecast-card img {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
         }
 
         .forecast-card h4 {
@@ -191,8 +193,7 @@
             }
 
             .forecast-card {
-                width: 180px;
-                max-width: 90%;
+                width: 160px;
                 margin: 0 auto;
             }
 
@@ -200,23 +201,15 @@
                 max-width: 100%;
                 padding: 15px;
             }
-        }
-
-        @media (max-width: 480px) {
-            .forecast-card {
-                width: 160px;
-                max-width: 90%;
-            }
-
-            .weekly-forecast {
-                gap: 10px;
-                flex-direction: row;
-                justify-content: center;
-                flex-wrap: nowrap;
-            }
 
             h1 {
-                font-size: 1.8em;
+                font-size: 2.2em;
+            }
+
+            .search-container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
             }
 
             input[type="text"], button {
@@ -224,9 +217,35 @@
                 padding: 10px;
             }
 
+            .weekly-forecast {
+                gap: 15px;
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .forecast-card {
+                width: 150px;
+                margin: 0 auto;
+            }
+
             .weather-info {
                 padding: 10px;
                 font-size: 0.9em;
+            }
+
+            .search-container {
+                gap: 10px;
+            }
+
+            .credits {
+                font-size: 0.8em;
             }
         }
     </style>
@@ -275,8 +294,6 @@
                 }
 
                 const { main, weather, wind } = currentWeatherData;
-                updateBackground(weather[0].main);
-
                 currentWeather.innerHTML = `
                     <h2>${city}</h2>
                     <img src="https://openweathermap.org/img/wn/${weather[0].icon}@2x.png" alt="Icona meteo">
@@ -286,6 +303,10 @@
                     <p class="wind-speed">Vento: ${wind.speed} m/s</p>
                 `;
 
+                // Aggiornare lo sfondo in base alla condizione meteo
+                updateBackground(weather[0].main);
+
+                // Previsioni settimanali
                 const forecastResponse = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric&lang=it`);
                 const forecastData = await forecastResponse.json();
                 const daysSet = new Set();
