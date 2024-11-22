@@ -12,7 +12,6 @@
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
-            background: #f0f4f8;
             color: #333;
             display: flex;
             flex-direction: column;
@@ -20,9 +19,11 @@
             justify-content: center;
             min-height: 100vh;
             padding: 10px;
-            opacity: 0;
+            background: linear-gradient(to bottom, #a8dadc, #457b9d);
             animation: fadeIn 1s ease-in-out forwards;
             transition: background 1s ease-in-out;
+            text-align: center;
+            width: 100%;
         }
 
         h1 {
@@ -32,6 +33,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            justify-content: center;
         }
 
         h1 i {
@@ -39,12 +41,25 @@
             color: #3498db;
         }
 
+        /* Container per la ricerca e la card principale */
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            width: 100%;
+            max-width: 500px; /* Impostato per limitare la larghezza */
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /* Barra di ricerca */
         .search-container {
             display: flex;
             gap: 10px;
             margin: 20px 0;
+            justify-content: center;
             width: 100%;
-            max-width: 400px;
         }
 
         input[type="text"] {
@@ -78,17 +93,41 @@
             transform: translateY(-3px);
         }
 
+        /* Card principale centrata con lo stesso stile delle altre card */
         .weather-info {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 25px;
+            background: #dcdde1;
+            color: #2c3e50;
             border-radius: 20px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            padding: 20px;
             text-align: center;
-            max-width: 350px;
             width: 100%;
             margin-bottom: 30px;
-            transition: background 0.3s ease;
+            animation: fadeInUp 0.8s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .weather-info h2 {
+            font-size: 2em;
+            color: #2980b9;
+        }
+
+        .weather-info img {
+            width: 70px;
+            height: 70px;
+        }
+
+        .weather-info .temp {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2980b9;
+        }
+
+        .weather-info .humidity,
+        .weather-info .wind-speed {
+            font-size: 1em;
+            color: #2980b9;
         }
 
         .weekly-forecast {
@@ -103,15 +142,13 @@
 
         /* Card delle previsioni settimanali */
         .forecast-card {
-            background: #dcdde1;  
+            background: #dcdde1;
             color: #2c3e50;
             border-radius: 20px;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
             padding: 20px;
             text-align: center;
             width: 180px;
-            max-width: 100%;
-            min-width: 150px; /* Larghezza minima per evitare che diventino troppo strette */
             opacity: 0;
             transform: translateY(20px);
             animation: fadeInUp 0.8s forwards;
@@ -186,68 +223,30 @@
             }
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            body {
-                padding: 20px;
-            }
-
-            .forecast-card {
-                width: 160px;
-                margin: 0 auto;
-            }
-
-            .weather-info {
-                max-width: 100%;
-                padding: 15px;
-            }
-
-            h1 {
-                font-size: 2.2em;
-            }
-
-            .search-container {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 15px;
-            }
-
-            input[type="text"], button {
-                font-size: 1em;
-                padding: 10px;
-            }
-
-            .weekly-forecast {
-                gap: 15px;
-                flex-direction: row;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
+        @keyframes backgroundClear {
+            0% { background: linear-gradient(to bottom, #d0e4e8, #89c2d9); }
+            50% { background: linear-gradient(to bottom, #cce0e6, #77b1d6); }
+            100% { background: linear-gradient(to bottom, #d0e4e8, #89c2d9); }
         }
 
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.8em;
-            }
-
-            .forecast-card {
-                width: 140px;  
-                margin: 0 auto;
-            }
-
-            .weather-info {
-                padding: 10px;
-                font-size: 0.9em;
-            }
-
-            .search-container {
-                gap: 10px;
-            }
-
-            .credits {
-                font-size: 0.8em;
-            }
+        @keyframes backgroundClouds {
+            0% { background: linear-gradient(to bottom, #b0c4d0, #a9b9c2); }
+            50% { background: linear-gradient(to bottom, #a4b4bc, #99acb8); }
+            100% { background: linear-gradient(to bottom, #b0c4d0, #a9b9c2); }
         }
+
+        @keyframes backgroundRain {
+            0% { background: linear-gradient(to bottom, #607d8b, #455a64); }
+            50% { background: linear-gradient(to bottom, #5c7986, #3f515c); }
+            100% { background: linear-gradient(to bottom, #607d8b, #455a64); }
+        }
+
+        @keyframes backgroundSnow {
+            0% { background: linear-gradient(to bottom, #f3f4f6, #dce2e6); }
+            50% { background: linear-gradient(to bottom, #edf1f5, #d6dce0); }
+            100% { background: linear-gradient(to bottom, #f3f4f6, #dce2e6); }
+        }
+
     </style>
 </head>
 <body>
@@ -255,109 +254,96 @@
         <h1><i class="fa-solid fa-cloud"></i> WeatherFlow</h1>
     </header>
     <main>
-        <div class="search-container">
-            <input type="text" id="city-input" placeholder="Inserisci città">
-            <button onclick="fetchWeather()">Cerca</button>
+        <div class="content-container">
+            <div class="search-container">
+                <input type="text" id="city-input" placeholder="Inserisci città">
+                <button onclick="fetchWeather()">Cerca</button>
+            </div>
+            <div id="current-weather" class="weather-info"></div>
         </div>
-        <div id="current-weather" class="weather-info"></div>
         <div id="weekly-forecast" class="weekly-forecast"></div>
         <p id="error-message" class="error"></p>
     </main>
+
     <footer class="credits">
-        Developed by <a href="#">ɢᴀʙʀɪᴇʟ®</a>
+        <p>Developed by <a href="#">ɢᴀʙʀɪᴇʟ®</a></p>
     </footer>
 
     <script>
-        const apiKey = '65977dbf31b8b81b7a853495eb4b84e4';
-
         async function fetchWeather() {
-            const city = document.getElementById('city-input').value.trim();
-            const errorMessage = document.getElementById('error-message');
+            const city = document.getElementById('city-input').value;
+            const apiKey = '65977dbf31b8b81b7a853495eb4b84e4';
             const currentWeather = document.getElementById('current-weather');
             const weeklyForecast = document.getElementById('weekly-forecast');
-
-            currentWeather.innerHTML = '';
+            const errorMessage = document.getElementById('error-message');
             weeklyForecast.innerHTML = '';
-            errorMessage.textContent = '';
 
             if (!city) {
-                errorMessage.textContent = 'Per favore inserisci una città.';
+                errorMessage.textContent = 'Inserisci una città.';
                 return;
             }
 
             try {
+                // Previsioni meteo correnti
                 const currentWeatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=it`);
                 const currentWeatherData = await currentWeatherResponse.json();
 
                 if (currentWeatherData.cod !== 200) {
-                    errorMessage.textContent = 'Città non trovata. Prova con un altro nome.';
+                    errorMessage.textContent = 'Città non trovata. Riprova.';
                     return;
                 }
 
-                const { main, weather, wind } = currentWeatherData;
-                currentWeather.innerHTML = `
-                    <h2>${city}</h2>
-                    <img src="https://openweathermap.org/img/wn/${weather[0].icon}@2x.png" alt="Icona meteo">
-                    <p class="temp">${Math.round(main.temp)}°C</p>
-                    <p>${weather[0].description}</p>
-                    <p class="humidity">Umidità: ${main.humidity}%</p>
-                    <p class="wind-speed">Vento: ${wind.speed} m/s</p>
-                `;
+                const { weather, main, wind } = currentWeatherData;
 
-                // Aggiorna lo sfondo in base alla condizione meteo
-                updateBackground(weather[0].main);
+                currentWeather.innerHTML = `
+                    <h2>${city.toUpperCase()}</h2>
+                    <img src="https://openweathermap.org/img/wn/${weather[0].icon}@2x.png" alt="${weather[0].description}">
+                    <p>${weather[0].description}</p>
+                    <p class="temp">Temperatura: ${Math.round(main.temp)}°C</p>
+                    <p class="humidity">Umidità: ${main.humidity}%</p>
+                    <p class="wind-speed">Vento: ${Math.round(wind.speed)} m/s</p>
+                `;
 
                 // Previsioni settimanali
                 const forecastResponse = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric&lang=it`);
                 const forecastData = await forecastResponse.json();
-                const daysSet = new Set();
+
+                const uniqueDates = new Set();
 
                 forecastData.list.forEach((forecast, index) => {
-                    const date = new Date(forecast.dt * 1000);
-                    const dayNumber = date.getDate();
+                    const { dt_txt, main, weather } = forecast;
+                    const date = new Date(dt_txt).getDate(); // Ottiene il numero del giorno
 
-                    if (!daysSet.has(dayNumber) && daysSet.size < 7) {
-                        daysSet.add(dayNumber);
+                    if (!uniqueDates.has(date)) {
+                        uniqueDates.add(date);
 
-                        const card = document.createElement('div');
-                        card.className = 'forecast-card';
-                        card.style.setProperty('--animation-delay', `${index * 0.1}s`);
-
-                        card.innerHTML = `
-                            <h4>${dayNumber}</h4>
-                            <img src="https://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png" alt="Icona meteo">
-                            <p class="temp">${Math.round(forecast.main.temp)}°C</p>
-                            <p>${forecast.weather[0].description}</p>
-                            <p class="humidity">Umidità: ${forecast.main.humidity}%</p>
-                            <p class="wind-speed">Vento: ${forecast.wind.speed} m/s</p>
+                        weeklyForecast.innerHTML += `
+                            <div class="forecast-card" style="--animation-delay: ${index * 0.2}s;">
+                                <h4>${date}</h4>
+                                <img src="https://openweathermap.org/img/wn/${weather[0].icon}@2x.png" alt="${weather[0].description}">
+                                <p>${weather[0].description}</p>
+                                <p class="temp">Temp: ${Math.round(main.temp)}°C</p>
+                                <p class="humidity">Umidità: ${main.humidity}%</p>
+                                <p class="wind-speed">Vento: ${Math.round(forecast.wind.speed)} m/s</p>
+                            </div>
                         `;
-                        weeklyForecast.appendChild(card);
                     }
                 });
+
+                document.body.style.animationName = getBackgroundAnimation(weather[0].main.toLowerCase());
             } catch (error) {
-                errorMessage.textContent = 'Errore nel recupero dei dati. Assicurati che la città sia corretta.';
+                errorMessage.textContent = 'Errore: ' + error.message;
             }
         }
 
-        function updateBackground(weatherCondition) {
-            let background;
-            switch (weatherCondition.toLowerCase()) {
-                case 'clear':
-                    background = 'linear-gradient(to bottom, #d0e4e8, #89c2d9)';
-                    break;
-                case 'clouds':
-                    background = 'linear-gradient(to bottom, #b0c4d0, #a9b9c2)';
-                    break;
-                case 'rain':
-                    background = 'linear-gradient(to bottom, #607d8b, #455a64)';
-                    break;
-                case 'snow':
-                    background = 'linear-gradient(to bottom, #f3f4f6, #dce2e6)';
-                    break;
-                default:
-                    background = 'linear-gradient(to bottom, #bdc3c7, #2c3e50)';
+        function getBackgroundAnimation(condition) {
+            switch (condition) {
+                case 'clear': return 'backgroundClear';
+                case 'clouds': return 'backgroundClouds';
+                case 'rain': return 'backgroundRain';
+                case 'snow': return 'backgroundSnow';
+                default: return '';
             }
-            document.body.style.background = background;
         }
     </script>
 </body>
