@@ -112,6 +112,7 @@
             text-align: center;
             width: 180px;
             max-width: 100%;
+            min-width: 150px; /* Larghezza minima per evitare che diventino troppo strette */
             opacity: 0;
             transform: translateY(20px);
             animation: fadeInUp 0.8s forwards;
@@ -231,7 +232,7 @@
             }
 
             .forecast-card {
-                width: 150px;
+                width: 140px;  /* Abbiamo ridotto la larghezza minima per schermi più piccoli */
                 margin: 0 auto;
             }
 
@@ -290,7 +291,8 @@
                 const currentWeatherData = await currentWeatherResponse.json();
 
                 if (currentWeatherData.cod !== 200) {
-                    throw new Error(currentWeatherData.message);
+                    errorMessage.textContent = 'Città non trovata. Prova con un altro nome.';
+                    return;
                 }
 
                 const { main, weather, wind } = currentWeatherData;
