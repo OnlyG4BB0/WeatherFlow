@@ -24,6 +24,7 @@
             transition: background 1s ease-in-out;
             text-align: center;
             width: 100%;
+            overflow-x: hidden; /* Nasconde solo lo scroll orizzontale */
         }
 
         h1 {
@@ -242,50 +243,30 @@
         }
 
         @keyframes backgroundSnow {
-            0% { background: linear-gradient(to bottom, #f3f4f6, #dce2e6); }
-            50% { background: linear-gradient(to bottom, #edf1f5, #d6dce0); }
-            100% { background: linear-gradient(to bottom, #f3f4f6, #dce2e6); }
+            0% { background: linear-gradient(to bottom, #f0f8ff, #e6f7ff); }
+            50% { background: linear-gradient(to bottom, #d8e7f0, #c6def0); }
+            100% { background: linear-gradient(to bottom, #f0f8ff, #e6f7ff); }
         }
 
-        /* Media Queries per mobile */
+        /* Media Queries per dispositivi mobili */
         @media (max-width: 768px) {
-            /* Adatta la larghezza delle card e del contenuto */
-            .content-container {
-                max-width: 100%;
-                padding: 10px;
-            }
-
-            .weather-info {
-                width: 100%;
-                padding: 15px;
-            }
-
-            .forecast-card {
-                width: 45%; /* Ridotto per adattarsi su mobile */
-                margin: 10px 0;
+            h1 {
+                font-size: 2em;
             }
 
             .search-container {
-                width: 100%;
                 flex-direction: column;
-                align-items: center;
             }
 
-            input[type="text"] {
-                width: 90%;
-                font-size: 1.1em;
-            }
-
+            input[type="text"],
             button {
-                width: 90%;
-                font-size: 1.1em;
+                width: 100%;
             }
         }
 
-        /* Media Queries per dispositivi mobile più piccoli */
         @media (max-width: 480px) {
             h1 {
-                font-size: 1.8em;
+                font-size: 1.6em;
             }
 
             .weather-info h2 {
@@ -318,7 +299,6 @@
     </footer>
 
     <script>
-        // Funzione di recupero dati meteo
         async function fetchWeather() {
             const city = document.getElementById('city-input').value;
             const apiKey = '65977dbf31b8b81b7a853495eb4b84e4';
@@ -326,6 +306,7 @@
             const weeklyForecast = document.getElementById('weekly-forecast');
             const errorMessage = document.getElementById('error-message');
             weeklyForecast.innerHTML = '';
+            errorMessage.textContent = ''; // Resetta il messaggio di errore
 
             if (!city) {
                 errorMessage.textContent = 'Inserisci una città.';
@@ -333,7 +314,6 @@
             }
 
             try {
-                // Previsioni meteo correnti
                 const currentWeatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=it`);
                 const currentWeatherData = await currentWeatherResponse.json();
 
@@ -353,7 +333,6 @@
                     <p class="wind-speed">Vento: ${Math.round(wind.speed)} m/s</p>
                 `;
 
-                // Previsioni settimanali
                 const forecastResponse = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric&lang=it`);
                 const forecastData = await forecastResponse.json();
 
@@ -361,7 +340,7 @@
 
                 forecastData.list.forEach((forecast, index) => {
                     const { dt_txt, main, weather } = forecast;
-                    const date = new Date(dt_txt).getDate(); // Ottiene il numero del giorno
+                    const date = new Date(dt_txt).getDate();
 
                     if (!uniqueDates.has(date)) {
                         uniqueDates.add(date);
