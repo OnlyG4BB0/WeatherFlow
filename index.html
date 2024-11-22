@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WeatherFlow - Previsioni Meteo</title>
-    <link rel="icon" href="https://cdn.icon-icons.com/icons2/565/PNG/512/cloudy-day_icon-icons.com_54312.png" type="image/png">
+    
+    <!-- Aggiungi Font Awesome per le icone -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     
     <style>
@@ -12,39 +13,39 @@
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(to bottom, #eef2f3, #8e9eab);
+            background: #f0f4f8;
             color: #333;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             min-height: 100vh;
             padding: 10px;
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out forwards;
+            transition: background 1s ease-in-out;
         }
 
         h1 {
             font-size: 2.5em;
             margin-bottom: 20px;
-            color: #4a4e69;
-            animation: fadeIn 1s ease-in-out;
+            color: #2c3e50;
             display: flex;
             align-items: center;
-            gap: 15px; /* Aggiungi spazio tra l'icona e il testo */
+            gap: 15px;
         }
 
         h1 i {
-            font-size: 1.5em; /* Dimensione dell'icona */
-            color: #457b9d;
+            font-size: 1.5em;
+            color: #3498db;
         }
 
         .search-container {
             display: flex;
             gap: 10px;
             margin: 20px 0;
-            animation: slideIn 1s ease-in-out;
             width: 100%;
-            max-width: 400px; /* Aggiungiamo un max-width per evitare che diventi troppo largo */
-            margin-bottom: 20px;
+            max-width: 400px;
         }
 
         input[type="text"] {
@@ -53,19 +54,18 @@
             border: 2px solid #a8dadc;
             border-radius: 25px;
             outline: none;
-            transition: border-color 0.3s ease;
             width: 100%;
             box-sizing: border-box;
         }
 
         input[type="text"]:focus {
-            border-color: #457b9d;
+            border-color: #3498db;
         }
 
         button {
             padding: 12px 25px;
             font-size: 1.2em;
-            background: #457b9d;
+            background: #3498db;
             border: none;
             border-radius: 25px;
             color: #fff;
@@ -75,14 +75,13 @@
         }
 
         button:hover {
-            background: #1d3557;
+            background: #2980b9;
             transform: translateY(-3px);
         }
 
         .weather-info {
             background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(10px);
             padding: 25px;
             border-radius: 20px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
@@ -90,34 +89,31 @@
             max-width: 350px;
             width: 100%;
             margin-bottom: 30px;
-            animation: fadeIn 1s ease-in-out;
+            transition: background 0.3s ease;
         }
 
         .weekly-forecast {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
             gap: 20px;
-            max-width: 1200px;
+            max-width: 800px;
             width: 100%;
             padding: 20px;
-            animation: slideInVertical 1s ease-in-out;
         }
 
         /* Card delle previsioni settimanali */
         .forecast-card {
-            background: #ffffff;
-            color: #333;
+            background: #ecf0f1;
+            color: #2c3e50;
             border-radius: 20px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-            padding: 25px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
             text-align: center;
-            min-width: 220px;
-            max-width: 280px;
-            flex-shrink: 0;
+            width: 200px;
             opacity: 0;
             transform: translateY(20px);
-            animation: fadeInUp 0.8s forwards; /* Animazione di comparsa */
-            transition: transform 0.3s ease;
+            animation: fadeInUp 0.8s forwards;
+            animation-delay: var(--animation-delay, 0s);
         }
 
         .forecast-card img {
@@ -128,7 +124,7 @@
         .forecast-card h4 {
             font-size: 1.3em;
             margin-top: 10px;
-            color: #457b9d;
+            color: #3498db;
         }
 
         .forecast-card p {
@@ -139,18 +135,32 @@
         .forecast-card .temp {
             font-size: 1.5em;
             font-weight: bold;
-            color: #1d3557;
+            color: #2980b9;
         }
 
         .forecast-card .humidity,
         .forecast-card .wind-speed {
             font-size: 1em;
-            color: #457b9d;
+            color: #2980b9;
         }
 
         .error {
             color: #e63946;
             margin-top: 10px;
+        }
+
+        .credits {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 1em;
+            color: #95a5a6;
+        }
+
+        .credits a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
         }
 
         /* Animazioni */
@@ -159,28 +169,6 @@
                 opacity: 0;
             }
             to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideInVertical {
-            from {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
                 opacity: 1;
             }
         }
@@ -197,37 +185,10 @@
         }
 
         /* Responsive */
-        @media (max-width: 1024px) {
-            .forecast-card {
-                min-width: 220px;
-            }
-        }
-
         @media (max-width: 768px) {
             .forecast-card {
                 min-width: 180px;
                 max-width: 220px;
-                font-size: 0.9em; /* Ridurre la dimensione del font */
-            }
-
-            h1 {
-                font-size: 2em; /* Ridurre la dimensione del titolo */
-            }
-
-            .search-container {
-                max-width: 100%;
-                flex-direction: column;
-                gap: 20px;
-            }
-
-            input[type="text"], button {
-                width: 100%;
-                font-size: 1.1em;
-            }
-
-            .weather-info {
-                padding: 15px;
-                font-size: 1em;
             }
         }
 
@@ -237,13 +198,12 @@
                 max-width: 180px;
             }
 
-            h1 {
-                font-size: 1.8em;
+            .weekly-forecast {
+                gap: 10px;
             }
 
-            .search-container {
-                max-width: 100%;
-                flex-direction: column;
+            h1 {
+                font-size: 1.8em;
             }
 
             input[type="text"], button {
@@ -260,7 +220,7 @@
 </head>
 <body>
     <header>
-        <h1><i class="fa-solid fa-cloud"></i> WeatherFlow</h1> <!-- Icona "cloud" aggiunta a sinistra del titolo -->
+        <h1><i class="fa-solid fa-cloud"></i> WeatherFlow</h1>
     </header>
     <main>
         <div class="search-container">
@@ -271,18 +231,19 @@
         <div id="weekly-forecast" class="weekly-forecast"></div>
         <p id="error-message" class="error"></p>
     </main>
+    <footer class="credits">
+        Developed by <a href="#">ɢᴀʙʀɪᴇʟ®</a>
+    </footer>
 
     <script>
-        const apiKey = '65977dbf31b8b81b7a853495eb4b84e4'; // La tua API key
+        const apiKey = '65977dbf31b8b81b7a853495eb4b84e4';
 
-        // Funzione per ottenere il meteo
         async function fetchWeather() {
             const city = document.getElementById('city-input').value.trim();
             const errorMessage = document.getElementById('error-message');
             const currentWeather = document.getElementById('current-weather');
             const weeklyForecast = document.getElementById('weekly-forecast');
 
-            // Pulisci i dati precedenti
             currentWeather.innerHTML = '';
             weeklyForecast.innerHTML = '';
             errorMessage.textContent = '';
@@ -301,50 +262,67 @@
                 }
 
                 const { main, weather, wind } = currentWeatherData;
-                const temp = Math.round(main.temp);
-                const description = weather[0].description;
-                const icon = weather[0].icon;
-                const humidity = main.humidity;
-                const windSpeed = wind.speed;
+                updateBackground(weather[0].main);
 
                 currentWeather.innerHTML = `
                     <h2>${city}</h2>
-                    <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="Icona meteo">
-                    <p class="temp">${temp}°C</p>
-                    <p>${description}</p>
-                    <p class="humidity">Umidità: ${humidity}%</p>
-                    <p class="wind-speed">Vento: ${windSpeed} m/s</p>
+                    <img src="https://openweathermap.org/img/wn/${weather[0].icon}@2x.png" alt="Icona meteo">
+                    <p class="temp">${Math.round(main.temp)}°C</p>
+                    <p>${weather[0].description}</p>
+                    <p class="humidity">Umidità: ${main.humidity}%</p>
+                    <p class="wind-speed">Vento: ${wind.speed} m/s</p>
                 `;
 
-                // Previsioni settimanali
                 const forecastResponse = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric&lang=it`);
                 const forecastData = await forecastResponse.json();
-                const forecastList = forecastData.list.slice(0, 7); // Prende solo i prossimi 7 giorni
-                forecastList.forEach((forecast, index) => {
-                    const { dt, main, weather, wind } = forecast;
-                    const date = new Date(dt * 1000);
-                    const dayOfWeek = date.toLocaleString('it-IT', { weekday: 'long' });
-                    const temp = Math.round(main.temp);
-                    const description = weather[0].description;
-                    const icon = weather[0].icon;
-                    const windSpeed = wind.speed;
+                const daysSet = new Set();
 
-                    const card = document.createElement('div');
-                    card.classList.add('forecast-card');
-                    card.innerHTML = `
-                        <h4>${dayOfWeek}</h4>
-                        <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="Icona meteo">
-                        <p class="temp">${temp}°C</p>
-                        <p>${description}</p>
-                        <p class="humidity">Umidità: ${main.humidity}%</p>
-                        <p class="wind-speed">Vento: ${windSpeed} m/s</p>
-                    `;
-                    weeklyForecast.appendChild(card);
+                forecastData.list.forEach((forecast, index) => {
+                    const date = new Date(forecast.dt * 1000);
+                    const dayNumber = date.getDate();
+
+                    if (!daysSet.has(dayNumber) && daysSet.size < 7) {
+                        daysSet.add(dayNumber);
+
+                        const card = document.createElement('div');
+                        card.className = 'forecast-card';
+                        card.style.setProperty('--animation-delay', `${index * 0.1}s`);
+
+                        card.innerHTML = `
+                            <h4>${dayNumber}</h4>
+                            <img src="https://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png" alt="Icona meteo">
+                            <p class="temp">${Math.round(forecast.main.temp)}°C</p>
+                            <p>${forecast.weather[0].description}</p>
+                            <p class="humidity">Umidità: ${forecast.main.humidity}%</p>
+                            <p class="wind-speed">Vento: ${forecast.wind.speed} m/s</p>
+                        `;
+                        weeklyForecast.appendChild(card);
+                    }
                 });
-
             } catch (error) {
                 errorMessage.textContent = 'Errore nel recupero dei dati. Assicurati che la città sia corretta.';
             }
+        }
+
+        function updateBackground(weatherCondition) {
+            let background;
+            switch (weatherCondition.toLowerCase()) {
+                case 'clear':
+                    background = 'linear-gradient(to bottom, #d0e4e8, #89c2d9)';
+                    break;
+                case 'clouds':
+                    background = 'linear-gradient(to bottom, #b0c4d0, #a9b9c2)';
+                    break;
+                case 'rain':
+                    background = 'linear-gradient(to bottom, #607d8b, #455a64)';
+                    break;
+                case 'snow':
+                    background = 'linear-gradient(to bottom, #f3f4f6, #dce2e6)';
+                    break;
+                default:
+                    background = 'linear-gradient(to bottom, #bdc3c7, #2c3e50)';
+            }
+            document.body.style.background = background;
         }
     </script>
 </body>
