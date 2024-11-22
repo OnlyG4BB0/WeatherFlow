@@ -247,29 +247,78 @@
             100% { background: linear-gradient(to bottom, #f3f4f6, #dce2e6); }
         }
 
+        /* Media Queries per mobile */
+        @media (max-width: 768px) {
+            /* Adatta la larghezza delle card e del contenuto */
+            .content-container {
+                max-width: 100%;
+                padding: 10px;
+            }
+
+            .weather-info {
+                width: 100%;
+                padding: 15px;
+            }
+
+            .forecast-card {
+                width: 45%; /* Ridotto per adattarsi su mobile */
+                margin: 10px 0;
+            }
+
+            .search-container {
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            input[type="text"] {
+                width: 90%;
+                font-size: 1.1em;
+            }
+
+            button {
+                width: 90%;
+                font-size: 1.1em;
+            }
+        }
+
+        /* Media Queries per dispositivi mobile più piccoli */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .weather-info h2 {
+                font-size: 1.8em;
+            }
+
+            .forecast-card {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
     </style>
 </head>
 <body>
-    <header>
-        <h1><i class="fa-solid fa-cloud"></i> WeatherFlow</h1>
-    </header>
-    <main>
-        <div class="content-container">
-            <div class="search-container">
-                <input type="text" id="city-input" placeholder="Inserisci città">
-                <button onclick="fetchWeather()">Cerca</button>
-            </div>
-            <div id="current-weather" class="weather-info"></div>
+    <h1><i class="fa-solid fa-cloud"></i> WeatherFlow</h1>
+
+    <div class="content-container">
+        <div class="search-container">
+            <input type="text" id="city-input" placeholder="Inserisci città">
+            <button onclick="fetchWeather()">Cerca</button>
         </div>
+
+        <div id="current-weather" class="weather-info"></div>
         <div id="weekly-forecast" class="weekly-forecast"></div>
-        <p id="error-message" class="error"></p>
-    </main>
+        <div id="error-message" class="error"></div>
+    </div>
 
     <footer class="credits">
         <p>Developed by <a href="#">ɢᴀʙʀɪᴇʟ®</a></p>
     </footer>
 
     <script>
+        // Funzione di recupero dati meteo
         async function fetchWeather() {
             const city = document.getElementById('city-input').value;
             const apiKey = '65977dbf31b8b81b7a853495eb4b84e4';
